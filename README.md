@@ -42,3 +42,24 @@ Rx.Observable.fromEvent(button, 'click')
 * error() will be called whenever theres an error.
 * complete() will be called whenever there are no more values left in the stream. Some streams may never end.
 * How does the observable know that is should call next error or complete ? This is done by a contract between the Observable and Observer signed through subscription. The Observable knows that it can fire next, error or complete on an Observer and the Observer knows that the Observable will only fire one of these three methods. So we can easily implement them on the Observer and react whenever they are fired.  
+* The following Observable wraps an event. It is never ending as a user can click any time. This Observable has an infinite stream of values(a new value everytime user clicks the button) amd then in the subscribe method we pass an observer. 
+```js
+Rx.Observable.fromEvent(button, 'click')
+  .subscribe(value => console.log(value.clientX);
+```
+* Subscribe can take either all the three methods or an object which implements all these three methods. Eg.
+```js
+const button = document.querySelector('button');
+const observer = {
+  next: function(value) {
+        console.log(value.clientX); // mouseevent.clientX
+        },
+  error: function(error) {
+         console.log(error);
+        },
+  complete: function() {
+        console.log(completed);
+        }
+}
+Rx.Observable.fromEvent(button, 'click').subscribe(observer); // will produce the same results as above code
+```

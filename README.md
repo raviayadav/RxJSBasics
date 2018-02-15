@@ -1,6 +1,6 @@
 # RxJS Basics
 
-## Creation of an observable
+## What and Why?
 * Basic Js click event
 ```js
 const button = document.querySelector('button');
@@ -28,3 +28,14 @@ Rx.Observable.fromEvent(button, 'click')
   .map(event => event.clientY) 
   .subscribe(data => console.log(data)); // Output the clientY everytime
 ```
+* Hence RxJS gives us the reactive programming which can ease our work.
+
+## Observables, Observers and Subscriptions
+
+* Observerables are basically wrappers around a source of data which is typically a stream of values. 
+* Observables are mostly used for Asynchronous data wrapping but can equally be used for wrapping sync source of data.
+* So, we have a stream of data of possible multiple async values and we want to do something when a new value occurs. That is the job of an **Observer** . 
+* The job of an Observer is to execute a peice of code, whenever a new value occurs or an error is reported or the Observable reports that it is completed.
+* So we need to connect the observer to the Observable to be able to do all that stuff. We do that connection by using **Subsciption** which basically means with one method, the subscribe method we tell the Observable, our wrapper around the stream of values that someone is caring about these values, someone is listening on these values(the observer).
+* The Observable implements three methods. ` next() error() complete()`
+* The next() method will be called whenever a new value is emitted.

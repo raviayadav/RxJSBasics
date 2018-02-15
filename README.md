@@ -92,9 +92,20 @@ Rx.Observable.create(function(obs){
   obs.next('Good times');
 //   obs.error('Error occured');
   obs.next('This code is unreachable as error above');
-  obs.complete('If no error, complete will run');
+  obs.complete();
   obs.error('This wont run as complete above');
 })
   .subscribe(observer);
 ```
 * In the above code, we are not listening to a click right now, We see the obs.next values in the console immediately because we are subscribed to an observable which takes a function and that function takes an observer(the const observer we defined) which we pass to subscribe `.subscribe(observer)` That takes it to the next method of the const observer we defined and executes it. After an error or complete in the Observable function (obs.error() or obs.complete()) no more code will be run as it will terminate the observable there.
+* An async example 
+```js
+Rx.Observable.create(function(obs){
+  obs.next('Some value');
+  setTimeout(function() {
+      obs.complete();
+  },2000);
+  obs.next('Good times');
+})
+  .subscribe(observer); // output -> Some value, Good times..after 2 seconds, completed
+```

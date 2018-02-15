@@ -37,7 +37,7 @@ Rx.Observable.fromEvent(button, 'click')
 * So, we have a stream of data of possible multiple async values and we want to do something when a new value occurs. That is the job of an **Observer** . 
 * The job of an Observer is to execute a peice of code, whenever a new value occurs or an error is reported or the Observable reports that it is completed.
 * So we need to connect the observer to the Observable to be able to do all that stuff. We do that connection by using **Subsciption** which basically means with one method, the subscribe method we tell the Observable, our wrapper around the stream of values that someone is caring about these values, someone is listening on these values(the observer).
-* The Observable implements three methods. ` next() error() complete()`
+* The Observer implements three methods. ` next() error() complete()`
 * The next() method will be called whenever a new value is emitted.
 * error() will be called whenever theres an error.
 * complete() will be called whenever there are no more values left in the stream. Some streams may never end.

@@ -109,3 +109,25 @@ Rx.Observable.create(function(obs){
 })
   .subscribe(observer); // output -> Some value, Good times..after 2 seconds, completed
 ```
+* Recreating the fromEvent from create 
+```js
+Rx.Observable.create(function(obs){
+  button.onclick = function(event) {
+    obs.next(event.clientX);
+  }
+})
+  .subscribe(observer);
+```
+* Observables like these on which we never call complete are actually dangerous as they can cause memory leaks. Always unsubscibe such observables in the following way. Take your observable in a variable and unsubscribe it at the end.
+```js
+const subscription = Rx.Observable.create(function(obs){
+  button.onclick = function(event) {
+    obs.next(event.clientX);
+  }
+})
+  .subscribe(observer);
+
+setTimeout(() => {
+  subscription.unsubscribe();
+}, 5000);
+```

@@ -132,7 +132,7 @@ setTimeout(() => {
 }, 5000);
 ```
 
-## map And throtteTime
+## map() And throtteTime()
 
 * Create an Observable using interval method. This will emit numbers after an interval of milliseconds that is passed by the user.
 ```js
@@ -154,4 +154,35 @@ const Example = Observable
 setTimeout(() => {
   Example.unsubscribe();
 }, 20000);
+```
+
+## Subject
+
+* Onservables are kind of passive, we may wrap an event or http request but we can't trigger the emission of a new value manually.
+* At some point, we might want to emit a value manually from an Observable, like an event emitter. 
+* We can do this using a Subject, it inherits from the Observer but here we can call the next method manually to force it to emit a new value.
+* Therefore we can have a forcefull or active approach with Subjects.
+* A subject is generally used as an event emitter and is subscribed at multiple places.
+```js
+const subject = new Rx.Subject();
+
+subject.subscribe({
+  next: (value) => {
+    console.log(value);
+  },
+  error: (error) => {
+    console.log(error);
+  },
+  complete: () => {
+    console.log('completed');
+  }
+});
+
+subject.subscribe({
+  next: value => console.log(value)
+});
+
+subject.next('Some peice of data');
+// subject.error(error);
+subject.complete();
 ```

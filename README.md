@@ -132,7 +132,7 @@ setTimeout(() => {
 }, 5000);
 ```
 
-## Throttle Time
+## map And throtteTime
 
 * Create an Observable using interval method. This will emit numbers after an interval of milliseconds that is passed by the user.
 ```js

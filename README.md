@@ -131,3 +131,27 @@ setTimeout(() => {
   subscription.unsubscribe();
 }, 5000);
 ```
+
+## Throttle Time
+
+* Create an Observable using interval method. This will emit numbers after an interval of milliseconds that is passed by the user.
+```js
+const Observable = Rx.Observable.interval(1000);
+// As no error or complete on ths one cos infinite stream
+const Observer = {
+  next: function(value) {
+    console.log(value);
+  }
+}
+// Map will modify each stream value of Observable
+// Throttletime will let only one stream value pass every x milliseconds
+// In this case as we are already using interval of 1, we get 3 difference
+const Example = Observable
+  .map(value => 'Number: ' + value*2)
+  .throttleTime(2000)
+  .subscribe(Observer);
+
+setTimeout(() => {
+  Example.unsubscribe();
+}, 20000);
+```

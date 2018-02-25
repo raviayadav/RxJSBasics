@@ -220,6 +220,7 @@ observable
 
 ```
 * Now if some on types Ravi in input and then backspaces and types Ravi again within the delay of debounceTime, we must name send the same call again. We can acheive this by using distinctValue. If the values are distinct the event will be prevented from firing.
+* Always be careful about the ordering of chain methods, distinctUntilChanged if used before deboubcedTime will not work cos there will be no time to check for changes.
 ```js
 const input = document.querySelector('input');
 

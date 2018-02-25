@@ -282,3 +282,84 @@ Observable
 });
 ```
 * **Always** remember to use pluck/map/filter after debounceTime to save resources
+
+## MergeMap
+
+* It is used to merge two observables to get combined output.
+* Let us say we have two inputs whose combined values we need, we will use mergreMap there
+```js
+const input1 = document.querySelector('#input1');
+const input2 = document.querySelector('#input2');
+const span = document.querySelector('span');
+Rx.Observable.fromEvent(input1, 'input')
+	.subscribe({
+  	next: event => span.textContent = event.target.value
+  });
+Rx.Observable.fromEvent(input2, 'input')
+	.subscribe({
+  	next: event => span.textContent = event.target.value
+  });
+```
+* Now in the above code, the text in the span will get replaced by either of the two inputs we have. We must use mergeMap to get a combined value
+* MergeMap will take an outer observable and then will merge an inner observable into it. And when the inner observable emits a value, it will merge the outer observables value into it to give us a combined value.
+* We have to return an observable from the mergeMap function. We returned a combined value of two observables. Nothing happens when we write in the 1st input box as it is the outer observable. As soon as we type in the 2nd input box we get the output as it is the inner observable and mergeMap fires only when the inner observables value is merged with the outer observable. We used map on the inner observable to make sure we get the desired value. it will apply to both events.
+
+```js
+const input1 = document.querySelector('#input1');
+const input2 = document.querySelector('#input2');
+const span = document.querySelector('span');
+const obs1 = Rx.Observable.fromEvent(input1, 'input');
+const obs2 = Rx.Observable.fromEvent(input2, 'input');
+
+obs1.mergeMap(
+  event1 => {
+    return obs2.map(event2 => event1.target.value + ' ' + event2.target.value)
+  }
+)
+  .subscribe(
+  value => span.textContent = value
+);
+```
+
+## SwitchMap
+
+* We use switchMap to cancel the last request and serve the new call.
+* For example, if we use the below code, a new subscription will take place on every click. That is, every time user clicks on the click me button, the console log will start from 0 to --- value. Multiple clicks will mean multiple simultaneous countings.
+* We can stop that by using mergeMap will cancel the last subscription and start a new one every time the user clicks the click button.
+* In a switch map we return a function where was pass the value of the outside observable but insdie of the function body we return the second observable. Switchmap will now react to the values emitted from the outer observable and it will then trigger the inner observable, basically switch the values. We wont recieve the click events but the values of the inner observables hence the name switcMap. The key is that it will cancels all old subscriptions if the outer observable is triggered(click button clicked).
+```js
+// Multiple clicks on click me will trigger multiple subscriptions which will run simultaneously
+const button = document.querySelector('button');
+const obs1 = Rx.Observable.fromEvent(button, 'click');
+const obs2 = Rx.Observable.interval(1999);
+obs1.subscribe(event => obs2.subscribe
+               (value => console.log(value)));
+```
+```js
+// switchMap cancels all the old subscriptions and starts the new one only
+const button = document.querySelector('button');
+const obs1 = Rx.Observable.fromEvent(button, 'click');
+const obs2 = Rx.Observable.interval(1999);
+obs1.switchMap(event => obs2).subscribe(value => console.log(value));
+```
+
+## Behavior Subject
+
+* We use it as a variable which when changed will let all the other parts of the project know that it has changed. We subscribe on it and make the functionality run over when the value changes.
+* It is similar to Subject. But Subjects do not have a default value. eg.
+```js
+const SubjectEmitted = new Rx.Subject();
+const button = document.querySelector('button');
+const div = document.querySelector('div');
+button.addEventListener('click', (e) => SubjectEmitted.next('clicked!!'));
+SubjectEmitted.subscribe(data => div.textContent = data);
+// SubjectEmitted.next('Not Clicked'); // This is the extra code we need to write manually to set the default code. Technically this is still incorrect as it will set it as the default value only when this line is reached in the code.
+```
+* Using behavior subject
+```js
+const SubjectEmitted = new Rx.BehaviorSubject('Default Value');
+const button = document.querySelector('button');
+const div = document.querySelector('div');
+button.addEventListener('click', (e) => SubjectEmitted.next('clicked!!'));
+SubjectEmitted.subscribe(data => div.textContent = data);
+```

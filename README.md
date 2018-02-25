@@ -186,3 +186,51 @@ subject.next('Some peice of data');
 // subject.error(error);
 subject.complete();
 ```
+## Filter
+* Return true or false in a fliter
+```js
+// Want to emit a number every second in ascending order
+const observable = Rx.Observable.interval(1000);
+// Subscribe on it and define an observer 
+// It is never going to complete
+// Use filter to return true or false
+observable
+  .filter(value => value % 2 === 0)
+  .subscribe({
+  next : value => console.log(value),
+  error: error => console.log('error', error),
+});
+```
+## DebounceTime and distinctUntilChanged
+
+* We use debounce time on say an input to reduce the number of http calls made on each keystroke.
+* This is a bit different from throtteTime as the debounceTime only fires after the event is not fired again for the given amount of time. throttle time will skip events which are filtered during the time lapse whereas debounceTime will always run after the end.
+* The use case is as follows
+* (Debounce) You want to make sure that a user has finished performing an action before carrying out a task e.g wait for a user to finish typing into an input field before sending an ajax request to query the db.
+* (Throttle) You want to control the rate at which an event is being fired so as to reduce the amount of time the corresponding task would run e.g you have an autcomplete field that queries your db and you want to trottle rate at which the input event is fired,(to avoid too many request to be sent in a short time).
+```js
+const input = document.querySelector('input');
+const observable = Rx.Observable.fromEvent(input, 'input');
+// The event will fire again after a delay of 2 seconds. Taking (not skipping like throttle) all values
+observable
+  .debounceTime(2000)
+  .subscribe({
+  next: (event) => console.log(event.target.value)
+});
+
+```
+* Now if some on types Ravi in input and then backspaces and types Ravi again within the delay of debounceTime, we must name send the same call again. We can acheive this by using distinctValue. If the values are distinct the event will be prevented from firing.
+```js
+const input = document.querySelector('input');
+
+const observable = Rx.Observable.fromEvent(input, 'input');
+// The order of chaining is important here, we must check for distinct values only after debounceTime 
+observable
+  .map(event => event.target.value)
+  .debounceTime(2000)
+  .distinctUntilChanged()
+  .subscribe({
+  next: (value) => console.log(value)
+});
+
+```

@@ -234,3 +234,49 @@ observable
 });
 
 ```
+
+## Scan vs Reduce
+
+* Reduce works same as array.reduce(). It takes in acc, cur value and an initial value and gives the reduced output.
+* Scan although almost same as reduce, returns the value of the acc at every step. 
+* Reduce to be used only on stream which we know will end at some point.
+* Scan can be used on infinite streams as well apart from finite streams.
+* Redce at work
+```js
+const observable = Rx.Observable.of(1, 2, 3, 4, 5);
+observable
+  .reduce((acc, curr) => {
+  return acc + curr;
+}, 0)
+  .subscribe({
+  next: value => console.log(value)
+});
+```
+* The output of the above code will be 15 in the console. It will be a SINGLE value at the end.
+* Scan at work
+```js
+const observable = Rx.Observable.of(1, 2, 3, 4, 5);
+observable
+  .scan((acc, curr) => {
+  return acc + curr;
+}, 0)
+  .subscribe({
+  next: value => console.log(value)
+});
+```
+* The output of the above code will be 1, 3, 6, 10, 15. The logging the value at every change. This is good to monitor events and can be used on infinite streams. Scan will use next at every value.
+
+## Pluck
+* Works similar to map but works only for objects.
+* Can get property or properties using pluck
+```js
+const Observable = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
+Observable
+  .debounceTime(500)
+//   .map(event => event.target.value)
+  .pluck('target', 'value')
+  .subscribe({
+  next : value => console.log(value)
+});
+```
+* **Always** remember to use pluck/map/filter after debounceTime to save resources

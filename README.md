@@ -275,6 +275,7 @@ Observable
   .debounceTime(500)
 //   .map(event => event.target.value)
   .pluck('target', 'value')
+  .distinctUntilChanged()
   .subscribe({
   next : value => console.log(value)
 });

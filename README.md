@@ -283,7 +283,7 @@ Observable
 ```
 * **Always** remember to use pluck/map/filter after debounceTime to save resources
 
-## MergeMap
+## MergeMap (FlatMap)
 
 * It is used to merge two observables to get combined output.
 * Let us say we have two inputs whose combined values we need, we will use mergreMap there

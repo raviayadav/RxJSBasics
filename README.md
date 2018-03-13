@@ -363,3 +363,24 @@ const div = document.querySelector('div');
 button.addEventListener('click', (e) => SubjectEmitted.next('clicked!!'));
 SubjectEmitted.subscribe(data => div.textContent = data);
 ```
+## ForkJoin
+
+* Many times, we need to load data from more than one source, and we need to delay the post-loading logic until all the data has loaded.
+* ReactiveX Observables provide a method called forkJoin() to wrap multiple Observables. Its subscribe() method sets the handlers on the entire set of Observables.
+```js
+  getBooksAndMovies() {
+    Observable.forkJoin(
+        this.http.get('/app/books.json').map((res:Response) => res.json()),
+        this.http.get('/app/movies.json').map((res:Response) => res.json())
+    ).subscribe(
+      data => {
+        this.books = data[0]
+        this.movies = data[1]
+      },
+      err => console.error(err)
+    );
+  }
+```
+* Notice that forkJoin() takes multiple arguments of type Observable. These can be Http.get() calls or any other asynchronous operation which implements the Observable pattern. We don't subscribe to each of these Observables individually. Instead, we subscribe to the "container" Observable object created by forkJoin().
+* When using Http.get() and Observable.forkJoin() together, the onNext handler will execute only once, and only after all HTTP requests complete successfully. It will receive an array containing the combined response data from all requests. In this case, our books data will be stored in data[0] and our movies data will be stored in data[1].
+* The onError handler here will run if either of the HTTP requests returns an error code.

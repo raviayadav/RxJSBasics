@@ -284,7 +284,7 @@ Observable
 * **Always** remember to use pluck/map/filter after debounceTime to save resources
 
 ## MergeMap (FlatMap)
-
+* [concatMap vs MergeMap] (https://blog.angularindepth.com/practical-rxjs-in-the-wild-requests-with-concatmap-vs-mergemap-vs-forkjoin-11e5b2efe293);
 * It is used to merge two observables to get combined output.
 * Let us say we have two inputs whose combined values we need, we will use mergreMap there
 ```js
